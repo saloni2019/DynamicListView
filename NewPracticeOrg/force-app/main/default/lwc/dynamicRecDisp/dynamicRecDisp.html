@@ -1,0 +1,606 @@
+<template>
+    <div class="slds-card slds-box">
+        <div class="slds-p-around_medium">
+            <h2 class="slds-text-align_center slds-text-title_bold">Dynamic Records Displayed Based on Object Selection</h2><br />
+    <lightning-combobox label="Select the object for which you want to see the data:" 
+                        name="selectObject"
+                        value={objectSelected} 
+                        options={objectOptions} 
+                        onchange={handleObjectSelection}
+                        style="width:350px;">
+    </lightning-combobox>
+    <br/>
+    <template if:true={displayAfterObjectSelected}>
+        <lightning-button variant="brand" 
+                          label="Click to Choose Records based on Filteration" 
+                          title="Click to Choose Records based on Filteration" 
+                          onclick={handleSelectFields} 
+                          class="">
+        </lightning-button>
+        <br/>
+        <br/>
+        <template if:true={showFilterPopUp}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true" aria-describedby="modal-content-id-3" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+            
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleFilterClose}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-03" class="slds-modal__title slds-hyphenate" tabindex="-1">Select the Fields that you want to Filter with: </h1>
+                </div>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                    <lightning-dual-listbox name="objectFields"
+                                    label="Select fields to display"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    field-level-help="Select fields to display"
+                                    options={fieldsOfObject}
+                                    onchange={handleFieldSelect}
+                                    required>
+                    </lightning-dual-listbox><br />
+                    <lightning-dual-listbox name="objectFields"
+                                            label="Select fields to filter"
+                                            source-label="Available"
+                                            selected-label="Selected"
+                                            field-level-help="Select fields to filter"
+                                            options={fieldsOfFilteration}
+                                            onchange={handleFieldSelectForFilter}
+                                            required>
+                    </lightning-dual-listbox><br />
+                    <template if:true={storeFieldSelectedAndType}>
+                        <template for:each={fieldEntries} for:item="item">
+                            <div key={item.fieldName} class="slds-m-around_medium">
+                                <template if:true={item.isString}>
+                                    <lightning-input
+                                        type="text"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isTextArea}>
+                                    <lightning-input
+                                        type="text"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isId}>
+                                    <lightning-input
+                                        type="text"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isPicklist}>
+                                    <lightning-combobox
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        options={item.fieldInfo.options}
+                                        onchange={handleChange}
+                                        data-field-type="picklist"
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-combobox>
+                                </template>
+                                <template if:true={item.isCurrency}>
+                                    <lightning-input
+                                        type="number"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isDouble}>
+                                    <lightning-input
+                                        type="number"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isBoolean}>
+                                    <lightning-input
+                                        type="checkbox"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isPhone}>
+                                    <lightning-input 
+                                        type="text"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isUrl}>
+                                    <lightning-input 
+                                        type="url"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isEmail}>
+                                    <lightning-input 
+                                        type="email" 
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isDate}>
+                                    <lightning-input 
+                                        type="date"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                    <!-- <lightning-combobox
+                                        name={item.fieldName}
+                                        label="Criteria"
+                                        options={optionsForDateCriteria}
+                                        onchange={handleDateOptionCriteria}>
+                                    </lightning-combobox> -->
+                                </template>
+                                <template if:true={item.isDateTime}>
+                                    <lightning-input 
+                                        type="date"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                                <template if:true={item.isInteger}>
+                                    <lightning-input 
+                                        type="number"
+                                        name={item.fieldName}
+                                        label={item.fieldName}
+                                        onchange={handleChange}
+                                        value={valueOnChange}
+                                        required>
+                                    </lightning-input>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:true={referenceObjectFields}>
+                            <template for:each={referenceObjectFields} for:item="ref">
+                                <div key={ref.fieldName} class="slds-m-around_medium">
+                                    <lightning-combobox
+                                        name={ref.referenceObjectName}
+                                        label={ref.fieldName}
+                                        data-subfield={ref.fieldName}
+                                        options={ref.options}
+                                        data-field-type="picklist"
+                                        onchange={handleRefSelection}
+                                        required>
+                                    </lightning-combobox>
+                                </div>
+                            </template>
+                            <template for:each={refFieldEntries} for:item="item">
+                                <div key={item.fieldName} class="slds-m-around_medium">
+                                    <template if:true={item.isString}>
+                                        <lightning-input
+                                            type="text"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isTextArea}>
+                                        <lightning-input
+                                            type="text"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isId}>
+                                        <lightning-input
+                                            type="text"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isPicklist}>
+                                        <lightning-combobox
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            options={item.fieldInfo.options}
+                                            data-field-type="picklist"
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-combobox>
+                                    </template>
+                                    <template if:true={item.isCurrency}>
+                                        <lightning-input
+                                            type="number"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isDouble}>
+                                        <lightning-input
+                                            type="number"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isBoolean}>
+                                        <lightning-input
+                                            type="checkbox"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isPhone}>
+                                        <lightning-input 
+                                            type="text"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isUrl}>
+                                        <lightning-input 
+                                            type="url"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isEmail}>
+                                        <lightning-input 
+                                            type="email" 
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={item.isDate}>
+                                        <lightning-input 
+                                            type="date"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                        <!-- <lightning-combobox
+                                            name="Select option to check on records less/equal/greater than date chosen: "
+                                            label="Select option to check on records less/equal/greater than date chosen: "
+                                            options={optionsForDateCriteria}
+                                            onchange={handleDateOptionCriteria}>
+                                        </lightning-combobox> -->
+                                    </template>
+                                    <template if:true={item.isDateTime}>
+                                        <lightning-input 
+                                            type="date"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                        <!-- <lightning-combobox
+                                            name="Select option to check on records less/equal/greater than date chosen: "
+                                            label="Select option to check on records less/equal/greater than date chosen: "
+                                            options={optionsForDateCriteria}
+                                            onchange={handleDateOptionCriteria}>
+                                        </lightning-combobox> -->
+                                    </template>
+                                    <template if:true={item.isInteger}>
+                                        <lightning-input 
+                                            type="number"
+                                            name={item.fieldName}
+                                            label={item.fieldName}
+                                            onchange={handleChange}
+                                            required>
+                                        </lightning-input>
+                                    </template>    
+                                </div>
+                            </template>
+                            <!-- <lightning-combobox name="Sorting selection"
+                                            label="Sorting Direction "
+                                            value={sortOrder}
+                                            class="slds-m-around_medium"
+                                            onchange={handleSortOrder}
+                                            placeholder="Select the order of sorting: (ASC/DSC): "
+                                            options={sortOptions}
+                                            required></lightning-combobox>
+                            <template if:true={sortOrder}> -->
+                                <lightning-combobox name="Choose field to sort"
+                                                label="Choose field to sort "
+                                                class="slds-m-around_medium"
+                                                value={sortedBy}
+                                                options={sortFieldOptions}
+                                                onchange={handleSortField}
+                                                required></lightning-combobox>
+                            <!-- </template> -->
+                        </template>                                    
+                    </template>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={handleFilteration} disabled={showFilterButton}>Filter Data</button>
+            </footer>
+            
+            </div>
+        </section>
+    </template>
+    <br/>
+    <template if:true={showData}>
+        <div style="max-height: 530px;" onitemregister={handleRegisterItem}>
+        <c-custom-datatable class="slds-max-medium-table_stacked" 
+            key-field="Id"
+            data={relatedListData}
+            columns={columns}
+            draft-values={draftValues}
+            onvaluechange={handleValueChange}
+            onrowselection={handleRowSelection}
+            selected-rows={rowsSelected}
+            onsave={handleSave}
+            onrowaction={handleRowAction}
+            oncellchange={handleCellChange}
+            show-row-number-column="true"
+            enable-inline-edit="true"
+            default-sort-direction={defaultSortDirection}
+            sorted-direction={sortOrder}
+            sorted-by={sortedBy}
+            onsort={onHandleSort}
+            >
+        </c-custom-datatable>
+        </div>
+        <br />
+        
+            <lightning-button label="Assign to Me" variant="brand" class="slds-align_absolute-center" onclick={handleAssignMe} title="Assign to Me"></lightning-button>
+            <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
+                <!--RECORDS PER PAGE-->
+                <div class="slds-col">
+                    <div class="slds-list_inline slds-p-bottom_xx-small">
+                        <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page Size:</label>
+                        <div class="slds-select_container">
+                            <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPage}>
+                                <template for:each={pageSizeOptions} for:item="option">
+                                    <option key={option} value={option}>{option}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--PAGE NAVIGATION-->
+                <div class="slds-align_absolute-center" style="height:5rem">
+                    <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
+                    <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+                    &nbsp;
+                    <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Page(s)</span>
+                    &nbsp;
+                    <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+                    <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+                </div>
+                <!--TOTAL RECORDS-->
+                <div class="slds-clearfix">
+                    <div class="slds-float_right">
+                        <span class="slds-badge"> Total Records: {totalRecords}</span>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <label class="slds-form-element__label" for="form-element-03">
+                <abbr class="slds-required" title="required">* </abbr>Do you need related list to be displayed?</label>
+            <lightning-radio-group name="radioGroup"
+                                    options={radioOptions}
+                                    value={value}
+                                    type="button" 
+                                    onchange={handleRadioChange}
+                                    >
+            </lightning-radio-group><br />
+            <template if:true={relatedRecordDisplayButton}>
+                <lightning-button variant="brand" 
+                          label="Display Related Records" 
+                          title="Display Related Records" 
+                          onclick={handleDisplayRelatedRecords} 
+                          class="">
+                </lightning-button>
+                <template if:true={displayErrorMessage}>
+                    <p class="slds-text-title_bold slds-text-color_error"><i>Please select the rows of the table on the top to see the related object records.</i></p>
+                </template>
+            </template>
+            <br />
+            <!-- <template if:false={relatedRecordDisplayButton}>
+                
+                    <lightning-button-icon icon-name="utility:email" 
+                                           variant="brand" 
+                                           alternative-text="Email" 
+                                           class="slds-m-left_x-large slds-p-left-medium slds-p-top_large" 
+                                           title="Email"></lightning-button-icon>
+
+            </template> -->
+            </template>
+        <template if:true={showError}>
+             <p class="slds-text-title_bold slds-text-color_error"><i>Sorry no data is available.</i></p>
+        </template>
+    </template>
+    <template if:true={isShowRelatedModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+            
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideRelatedModalBox}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate" tabindex="-1">Select Related Object and its Fields</h1>
+                </div>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                <lightning-combobox label="Select the Related object for which you want to see the data:" 
+                                    name="selectRelatedObject"
+                                    value={relatedObjectSelected} 
+                                    options={relatedObjectOptions} 
+                                    onchange={handleRelatedObjectSelection}
+                                    required>
+                </lightning-combobox><br />
+                <template if:true={displayAfterRelatedObjectSelected}>
+                    <lightning-dual-listbox name="relatedObjectFields"
+                                        label="Select Related Object fields to display"
+                                        source-label="Available"
+                                        selected-label="Selected"
+                                        field-level-help="Select Related Object fields to display"
+                                        options={fieldsOfRelatedObject}
+                                        onchange={handleRelatedObjectFieldSelect}
+                                        required>
+                    </lightning-dual-listbox>
+                </template>
+                 <!-- <lightning-combobox name="Sorting selection"
+                                            label="Sorting Direction "
+                                            value={sortOrderRelated}
+                                            onchange={handleSortOrderRelated}
+                                            class="slds-m-around_medium"
+                                            placeholder="Select the order of sorting: (ASC/DSC): "
+                                            options={sortOptions} required></lightning-combobox> -->
+                            <!-- <template if:true={sortOrder}> -->
+                                <lightning-combobox name="Choose field to sort"
+                                                label="Choose field to sort "
+                                                value={sortByRelated}
+                                                class="slds-m-around_medium"
+                                                options={sortFieldRelatedOptions}
+                                                onchange={handleSortRelatedField} required></lightning-combobox>
+                            <!-- </template> -->
+            </div>
+            
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={handleFinishForRelated} disabled={showFinishButton}>Finish</button>
+            </footer>
+            
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+     </template>
+     <br />
+     <template if:true={showRelatedData}>
+        <h2 class="slds-text-align_center slds-text-title_bold">Selected Related Object Records</h2><br />
+        <label>Please find your records below:</label><br />
+        <div></div>
+        <!-- <lightning-datatable  key-field="Id"
+                           data={relatedRecordList}
+                           columns={relatedColumns}
+                           onsave={handleRelatedSave}
+                           onrowselection={handleRelatedRowSelection}
+                           draft-values={draftRelatedValues}
+                           oncellchange={handleRelatedCellChange}>
+        </lightning-datatable> -->
+        <div style="max-height: 530px;" onitemregister={handleRegisterItem}>
+            <c-custom-datatable class="slds-max-medium-table_stacked" 
+                key-field="Id"
+                data={relatedRecordList}
+                columns={relatedColumns}
+                draft-values={draftRelatedValues}
+                onvaluechange={handleRelatedValueChange}
+                onsave={handleRelatedSave}
+                oncellchange={handleRelatedCellChange}
+                show-row-number-column="true"
+                enable-inline-edit="true"
+                onrowselection={handleRelatedRowSelection}
+                selected-rows={rowsRelSelected}
+                default-sort-direction={defaultSortDirection}
+                sorted-direction={sortOrderRelated}
+                sorted-by={sortedByRelated}
+                onrowaction={handleRelatedRowAction}
+                onsort={onHandleRelatedSort}
+                >
+            </c-custom-datatable>
+        </div>
+        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
+            <!--RECORDS PER PAGE-->
+            <div class="slds-col">
+                <div class="slds-list_inline slds-p-bottom_xx-small">
+                    <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page Size:</label>
+                    <div class="slds-select_container">
+                        <select class="slds-select" id="recordsPerPage2" onchange={handleRelatedRecordsPerPage}>
+                            <template for:each={pageSizeOptions} for:item="option">
+                                <option key={option} value={option}>{option}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--PAGE NAVIGATION-->
+            <div class="slds-align_absolute-center" style="height:5rem">
+                <lightning-button disabled={bRelatedRecDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={relatedRecordFirstPage}></lightning-button>
+                <lightning-button disabled={bRelatedRecDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={relatedRecordPreviousPage}></lightning-button>
+                &nbsp;
+                <span class="slds-badge">Showing {relatedRecordPageNumber} &nbsp;of&nbsp; {totalRelatedRecPages} &nbsp;&nbsp;Page(s)</span>
+                &nbsp;
+                <lightning-button disabled={bRelatedRecDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={relatedRecordNextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+                <lightning-button disabled={bRelatedRecDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={relatedRecordLastPage} icon-position="right"></lightning-button>
+            </div>
+            <!--TOTAL RECORDS-->
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <span class="slds-badge"> Total Records: {totalRelatedRecords}</span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <lightning-button label="Assign to Me" variant="brand" class="slds-align_absolute-center" onclick={handleRelatedRecAssignMe} title="Assign to Me"></lightning-button>
+        <!-- <lightning-button-icon icon-name="utility:email" 
+                               variant="brand" 
+                               alternative-text="Email" 
+                               class="slds-m-left_xx-small" 
+                               title="Email"
+                               onclick={handleEmailButton}></lightning-button-icon> -->
+     </template>
+      <template if:true={showRelatedDataError}>
+             <p class="slds-text-title_bold slds-text-color_error"><i>Sorry no data is available.</i></p>
+        </template>
+        </div>
+    </div>
+</template>

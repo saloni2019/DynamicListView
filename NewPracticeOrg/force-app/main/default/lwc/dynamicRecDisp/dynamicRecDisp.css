@@ -1,0 +1,11 @@
+.slds-form-element__label {
+    font-size: 0.8125rem;
+}
+.searchComp {
+    display:flex ;
+    margin-bottom: 15px;
+}
+lightning-button.filter{
+    margin-top:20px;
+    margin-left: 20px;
+}
