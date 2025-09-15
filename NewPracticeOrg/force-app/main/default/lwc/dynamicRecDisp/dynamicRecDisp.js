@@ -1,24 +1,24 @@
 import { LightningElement, wire, track } from 'lwc';
 import CustomDatatable from 'c/customDatatable';
-import getObjects from '@salesforce/apex/fetchDynamicData.getObjects';
-import getChildObjects from '@salesforce/apex/fetchDynamicData.getChildObjects';
+import getObjects from '@salesforce/apex/FetchDynamicRecord.getObjects';
+import getChildObjects from '@salesforce/apex/FetchDynamicRecord.getChildObjects';
 import getChildFieldNames from '@salesforce/apex/CustomRelatedList.getChildFieldNames';
 import getChildFieldNamesForFilteration from '@salesforce/apex/CustomRelatedList.getChildFieldNamesForFilteration';
 import getFieldNamesWithType from '@salesforce/apex/CustomRelatedList.getFieldNamesWithType';
-import getObjectRecords from '@salesforce/apex/fetchDynamicData.getObjectRecords';
+import getObjectRecords from '@salesforce/apex/FetchDynamicRecord.getObjectRecords';
 import ID from '@salesforce/user/Id';
 import searchRecords from '@salesforce/apex/CustomRelatedList.searchRecords';
 import relatedObjectSearchRecords from '@salesforce/apex/CustomRelatedList.relatedObjectSearchRecords';
 import updateRecords from '@salesforce/apex/CustomRelatedList.updateRecords';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getRecords from '@salesforce/apex/fetchDynamicData.getRecords';
-import getFieldTypes from '@salesforce/apex/fetchDynamicData.getFieldTypes';
-import getFieldsWithDetails from '@salesforce/apex/fetchDynamicData.getFieldsWithDetails';
-import getFilteredRecords from '@salesforce/apex/fetchDynamicData.getFilteredRecords';
-import getReferenceObjectName from '@salesforce/apex/fetchDynamicData.getReferenceObjectName';
-import getFieldNamesWithTypeAndPicklist from '@salesforce/apex/fetchDynamicData.getFieldNamesWithTypeAndPicklist';
-import getChildFieldNamesForRefFilteration from '@salesforce/apex/fetchDynamicData.getChildFieldNamesForRefFilteration';
-import assignRecordToSelf from '@salesforce/apex/fetchDynamicData.assignRecordToSelf';
+import getRecords from '@salesforce/apex/FetchDynamicRecord.getRecords';
+import getFieldTypes from '@salesforce/apex/FetchDynamicRecord.getFieldTypes';
+import getFieldsWithDetails from '@salesforce/apex/FetchDynamicRecord.getFieldsWithDetails';
+import getFilteredRecords from '@salesforce/apex/FetchDynamicRecord.getFilteredRecords';
+import getReferenceObjectName from '@salesforce/apex/FetchDynamicRecord.getReferenceObjectName';
+import getFieldNamesWithTypeAndPicklist from '@salesforce/apex/FetchDynamicRecord.getFieldNamesWithTypeAndPicklist';
+import getChildFieldNamesForRefFilteration from '@salesforce/apex/FetchDynamicRecord.getChildFieldNamesForRefFilteration';
+import assignRecordToSelf from '@salesforce/apex/FetchDynamicRecord.assignRecordToSelf';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class DynamicRecDisp extends NavigationMixin(LightningElement) {

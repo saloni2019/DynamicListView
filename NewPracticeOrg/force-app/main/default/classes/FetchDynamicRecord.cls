@@ -1,6 +1,5 @@
-public with sharing class fetchDynamicData {
-
-    @AuraEnabled(cacheable=true)
+public class FetchDynamicRecord {
+   @AuraEnabled(cacheable=true)
     public static List<String> getObjects(){
         List<String> objectMap = new List<String>();
         for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().Values()){
@@ -344,6 +343,4 @@ public static List<SObject> searchLookupRecords(String objectApiName, String sea
         }
         
     }
-        
-
 }
