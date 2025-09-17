@@ -60,4 +60,29 @@ public class CustomRelatedListTestClass {
         Account updatedAcc = [SELECT Id, Name FROM Account WHERE Id = :accList[0].Id LIMIT 1];
         System.assertEquals('Updated Account Name', updatedAcc.Name, 'Account name should be updated');
     }
+
+    @IsTest
+    static void testgetChildFieldNamesForFilteration(){
+        Test.startTest();
+        List<String> childFieldNames = CustomRelatedList.getChildFieldNamesForFilteration('Account');
+        Test.stopTest();
+        System.Assert.areNotEqual(null, childFieldNames, 'Child field names list should not be null');
+    }
+
+    @isTest
+    static void testRelatedObjectSearchRecords_Found() {
+        Test.startTest();
+        
+        List<List<sObject>> results = CustomRelatedList.relatedObjectSearchRecords(
+            'Class',              
+            'Contact',                  
+            'Id, LastName',             
+            'Account',
+            'AccountId != null'                  
+        );
+        
+        Test.stopTest();
+        
+        System.assertNotEquals(0, results.size(), 'Results should not be empty');
+    }
 }

@@ -1108,21 +1108,21 @@ export default class DynamicRecDisp extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleRelatedSearchTermChange(event){
-        this.searchRelatedTerm = event.target.value;
+    // handleRelatedSearchTermChange(event){
+    //     this.searchRelatedTerm = event.target.value;
         
-        console.log('searchRelatedTerm',this.searchRelatedTerm);
-        if (this.searchRelatedTerm && this.searchRelatedTerm.length > 2) {
-            relatedObjectSearchRecords({ searchTerm: this.searchRelatedTerm, objectAPIName: this.relatedObjectSelected, columnNames: this.relatedObjectFieldsSelected.toString(),  parentObject: this.objectSelected}).then(res => {
-                this.relatedRecordList=[];
-                this.relatedRecordList = res[0];
-            });
-        } else if(this.searchRelatedTerm.length == 0){
-            this.relatedRecordList=[];
-            this.relatedRecordList = this._relatedRecords;
-            console.log(this.relatedRecordList);
-        }
-    }
+    //     console.log('searchRelatedTerm',this.searchRelatedTerm);
+    //     if (this.searchRelatedTerm && this.searchRelatedTerm.length > 2) {
+    //         relatedObjectSearchRecords({ searchTerm: this.searchRelatedTerm, objectAPIName: this.relatedObjectSelected, columnNames: this.relatedObjectFieldsSelected.toString(),  parentObject: this.objectSelected}).then(res => {
+    //             this.relatedRecordList=[];
+    //             this.relatedRecordList = res[0];
+    //         });
+    //     } else if(this.searchRelatedTerm.length == 0){
+    //         this.relatedRecordList=[];
+    //         this.relatedRecordList = this._relatedRecords;
+    //         console.log(this.relatedRecordList);
+    //     }
+    // }
 
     handleEmailButton(){
 
